@@ -25,6 +25,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
 }
 
 dependencies {
@@ -39,7 +45,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.cocodestudio'
                 artifactId = 'focora'
-                version = '1.0.0'
+                version = '1.0.1'
             }
         }
     }
