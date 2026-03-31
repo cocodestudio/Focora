@@ -1,0 +1,7 @@
+-keep class com.cocode.focora.Focora { *; }
+-keep class com.cocode.focora.FocoraStep { *; }
+-keep class com.cocode.focora.FocoraTheme { *; }
+-keep class com.cocode.focora.FocoraListener { *; }
+-keep enum com.cocode.focora.FocoraShape { *; }
+-keep enum com.cocode.focora.TooltipPosition { *; }
+-keep enum com.cocode.focora.AnimationStyle { *; }

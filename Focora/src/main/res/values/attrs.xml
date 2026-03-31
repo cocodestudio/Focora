@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Focora">
+        <attr name="pod_overlayColor" format="color" />
+        <attr name="pod_spotlightPadding" format="dimension" />
+        <attr name="pod_tooltipBackground" format="color" />
+        <attr name="pod_tooltipCornerRadius" format="dimension" />
+        <attr name="pod_titleTextColor" format="color" />
+        <attr name="pod_descTextColor" format="color" />
+        <attr name="pod_buttonBackground" format="color" />
+        <attr name="pod_buttonTextColor" format="color" />
+        <attr name="pod_showSkipButton" format="boolean" />
+        <attr name="pod_showStepIndicator" format="boolean" />
+        <attr name="pod_showArrow" format="boolean" />
+    </declare-styleable>
+</resources>
