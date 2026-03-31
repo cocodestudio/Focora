@@ -1,10 +1,6 @@
 # Focora
 
 <p align="center">
-  <img src="assets/focora_banner.png" alt="Focora Banner" width="100%" />
-</p>
-
-<p align="center">
   <a href="https://jitpack.io/#cocodestudio/Focora"><img src="https://jitpack.io/v/cocodestudio/Focora.svg" alt="JitPack" /></a>
   <a href="https://android-arsenal.com/api?level=21"><img src="https://img.shields.io/badge/API-21%2B-brightgreen.svg" alt="API Level" /></a>
   <a href="https://github.com/cocodestudio/Focora/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
