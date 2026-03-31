@@ -1,7 +1,7 @@
 # Focora
 
 <p align="center">
-  <img src="assets/Focora_banner.png" alt="Focora Banner" width="100%" />
+  <img src="assets/focora_banner.png" alt="Focora Banner" width="100%" />
 </p>
 
 <p align="center">
