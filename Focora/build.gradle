@@ -11,7 +11,7 @@ android {
         minSdk 23
         targetSdk 36
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.0.2"
         consumerProguardFiles "consumer-rules.pro"
     }
 
@@ -45,7 +45,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.cocodestudio'
                 artifactId = 'focora'
-                version = '1.0.1'
+                version = '1.0.2'
             }
         }
     }

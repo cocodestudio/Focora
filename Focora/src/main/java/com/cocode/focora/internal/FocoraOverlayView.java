@@ -157,16 +157,34 @@ public class FocoraOverlayView extends FrameLayout {
     }
 
     private RectF calculateTargetRect(FocoraStep step) {
-        int[] loc = new int[2];
-        step.getTarget().getLocationInWindow(loc);
+        // 1. Get the target view's absolute location on the screen
+        int[] targetLocation = new int[2];
+        step.getTarget().getLocationInWindow(targetLocation);
+
+        // 2. Get the overlay's own absolute location to find the Action Bar / EdgeToEdge offset
+        int[] overlayLocation = new int[2];
+        this.getLocationInWindow(overlayLocation);
+
+        // 3. Calculate safe relative coordinates by subtracting the offset
+        float relativeX = targetLocation[0] - overlayLocation[0];
+        float relativeY = targetLocation[1] - overlayLocation[1];
+
         float pad = FocoraUtils.dpToPx(getContext(), theme.getSpotlightPaddingDp());
 
-        RectF rect = new RectF(loc[0] - pad, loc[1] - pad, loc[0] + step.getTarget().getWidth() + pad, loc[1] + step.getTarget().getHeight() + pad);
+        // 4. Draw using the relative coordinates
+        RectF rect = new RectF(
+                relativeX - pad,
+                relativeY - pad,
+                relativeX + step.getTarget().getWidth() + pad,
+                relativeY + step.getTarget().getHeight() + pad
+        );
+
         if (step.getShape() == FocoraShape.CIRCLE) {
             float cx = rect.centerX(), cy = rect.centerY();
             float r = Math.max(rect.width(), rect.height()) / 2f;
             rect.set(cx - r, cy - r, cx + r, cy + r);
         }
+
         return rect;
     }
 
