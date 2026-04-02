@@ -763,38 +763,10 @@ Contributions are welcome. To contribute:
 2. Create a feature branch: `git checkout -b feature/your-feature-name`
 3. Write your changes in **Java only** — no Kotlin in the library module
 4. Ensure no new dependencies are added to the library module
-5. Test on API 21 and at least one recent API level
+5. Test on API 23 and at least one recent API level
 6. Submit a pull request with a clear description of what changed and why
 
 For bug reports, open a GitHub Issue with your Android version, device, and a minimal code snippet that reproduces the issue.
-
----
-
-## License
-
-```
-MIT License
-
-Copyright (c) 2026 CoCode Studio
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
 
 ---
 
