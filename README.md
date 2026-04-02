@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://jitpack.io/#cocodestudio/Focora"><img src="https://jitpack.io/v/cocodestudio/Focora.svg" alt="JitPack" /></a>
-  <a href="https://android-arsenal.com/api?level=23"><img src="https://img.shields.io/badge/API-21%2B-brightgreen.svg" alt="API Level" /></a>
+  <a href="https://android-arsenal.com/api?level=23"><img src="https://img.shields.io/badge/API-23%2B-brightgreen.svg" alt="API Level" /></a>
   <a href="https://github.com/cocodestudio/Focora/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
   <a href="https://github.com/cocodestudio/Focora/releases"><img src="https://img.shields.io/github/v/release/cocodestudio/Focora" alt="Latest Release" /></a>
   <img src="https://img.shields.io/badge/Language-Java-orange.svg" alt="Java" />
