@@ -123,7 +123,7 @@ dependencyResolutionManagement {
 
 ```gradle
 dependencies {
-    implementation 'com.github.cocodestudio:Focora:1.0.0'
+    implementation 'com.github.cocodestudio:Focora:1.0.3'
 }
 ```
 
