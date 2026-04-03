@@ -15,8 +15,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 
-import androidx.annotation.NonNull;
-
 import com.cocode.focora.AnimationStyle;
 import com.cocode.focora.FocoraStep;
 import com.cocode.focora.FocoraTheme;
@@ -41,7 +39,7 @@ public class FocoraOverlayView extends FrameLayout {
     private ValueAnimator currentAnimator;
     private boolean dismissOnTapOutside = false;
 
-    public FocoraOverlayView(@NonNull Context context, FocoraTheme theme, int totalSteps, boolean dismissOnBackPress, Runnable onNext, Runnable onSkip) {
+    public FocoraOverlayView(Context context, FocoraTheme theme, int totalSteps, boolean dismissOnBackPress, Runnable onNext, Runnable onSkip) {
         super(context);
         this.theme = theme;
         this.totalSteps = totalSteps;
@@ -157,21 +155,18 @@ public class FocoraOverlayView extends FrameLayout {
     }
 
     private RectF calculateTargetRect(FocoraStep step) {
-        // 1. Get the target view's absolute location on the screen
+        // Safe relative math for Sketchware Action Bar / Edge To Edge layouts
         int[] targetLocation = new int[2];
         step.getTarget().getLocationInWindow(targetLocation);
 
-        // 2. Get the overlay's own absolute location to find the Action Bar / EdgeToEdge offset
         int[] overlayLocation = new int[2];
         this.getLocationInWindow(overlayLocation);
 
-        // 3. Calculate safe relative coordinates by subtracting the offset
         float relativeX = targetLocation[0] - overlayLocation[0];
         float relativeY = targetLocation[1] - overlayLocation[1];
 
         float pad = FocoraUtils.dpToPx(getContext(), theme.getSpotlightPaddingDp());
 
-        // 4. Draw using the relative coordinates
         RectF rect = new RectF(
                 relativeX - pad,
                 relativeY - pad,
@@ -184,7 +179,6 @@ public class FocoraOverlayView extends FrameLayout {
             float r = Math.max(rect.width(), rect.height()) / 2f;
             rect.set(cx - r, cy - r, cx + r, cy + r);
         }
-
         return rect;
     }
 
@@ -310,7 +304,7 @@ public class FocoraOverlayView extends FrameLayout {
     private float lerp(float a, float b, float t) { return a + (b - a) * t; }
     private long resolveMs(long def) { return FocoraUtils.resolveAnimDuration(getContext(), theme.isRespectReducedMotion(), def); }
 
-    @Override protected void onDraw(@NonNull Canvas canvas) {
+    @Override protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         renderer.render(canvas, getWidth(), getHeight(), currentSpotlightRect, currentCornerRadius, currentBgAlpha, currentShape, theme);
     }
@@ -321,21 +315,10 @@ public class FocoraOverlayView extends FrameLayout {
         if (currentAnimator != null) currentAnimator.cancel();
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    @Override public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            // 1. If user taps inside the spotlight hole, let the touch pass through to the app beneath
-            if (currentSpotlightRect.contains(event.getX(), event.getY())) {
-                return false;
-            }
-
-            // 2. If user taps anywhere outside the spotlight and dismiss is enabled, cancel the tutorial
-            if (dismissOnTapOutside) {
-                onSkip.run();
-                return true; // Consume the touch so they don't accidentally click background buttons
-            }
-
-            // 3. Otherwise, block the touch (forces user to use "Next" or "Skip" buttons)
+            if (currentSpotlightRect.contains(event.getX(), event.getY())) return false;
+            if (dismissOnTapOutside) { onSkip.run(); return true; }
             return true;
         }
         return super.onTouchEvent(event);

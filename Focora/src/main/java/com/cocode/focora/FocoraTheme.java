@@ -2,10 +2,6 @@ package com.cocode.focora;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
-import androidx.annotation.ColorInt;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.Px;
 
 public final class FocoraTheme {
     private final int overlayColor;
@@ -82,8 +78,8 @@ public final class FocoraTheme {
     public float getTitleTextSizeSp() { return titleTextSizeSp; }
     public int getDescTextColor() { return descTextColor; }
     public float getDescTextSizeSp() { return descTextSizeSp; }
-    @Nullable public Typeface getTitleTypeface() { return titleTypeface; }
-    @Nullable public Typeface getDescTypeface() { return descTypeface; }
+    public Typeface getTitleTypeface() { return titleTypeface; }
+    public Typeface getDescTypeface() { return descTypeface; }
     public int getButtonBackgroundColor() { return buttonBackgroundColor; }
     public int getButtonTextColor() { return buttonTextColor; }
     public float getButtonCornerRadiusDp() { return buttonCornerRadiusDp; }
@@ -143,31 +139,31 @@ public final class FocoraTheme {
         private float stepIndicatorSizeDp = 6f;
         private boolean respectReducedMotion = true;
 
-        public Builder overlayColor(@ColorInt int color) { this.overlayColor = color; return this; }
-        public Builder spotlightBorder(@ColorInt int color, @Px float widthPx) { this.spotlightBorderColor = color; this.spotlightBorderWidth = widthPx; return this; }
+        public Builder overlayColor(int color) { this.overlayColor = color; return this; }
+        public Builder spotlightBorder(int color, float widthPx) { this.spotlightBorderColor = color; this.spotlightBorderWidth = widthPx; return this; }
         public Builder spotlightPadding(float dp) { this.spotlightPaddingDp = dp; return this; }
-        public Builder tooltipBackgroundColor(@ColorInt int color) { this.tooltipBackgroundColor = color; return this; }
+        public Builder tooltipBackgroundColor(int color) { this.tooltipBackgroundColor = color; return this; }
         public Builder tooltipCornerRadius(float dp) { this.tooltipCornerRadiusDp = dp; return this; }
         public Builder tooltipElevation(float dp) { this.tooltipElevationDp = dp; return this; }
         public Builder tooltipMaxWidth(int dp) { this.tooltipMaxWidthDp = dp; return this; }
-        public Builder titleTextColor(@ColorInt int color) { this.titleTextColor = color; return this; }
+        public Builder titleTextColor(int color) { this.titleTextColor = color; return this; }
         public Builder titleTextSize(float sp) { this.titleTextSizeSp = sp; return this; }
-        public Builder descTextColor(@ColorInt int color) { this.descTextColor = color; return this; }
+        public Builder descTextColor(int color) { this.descTextColor = color; return this; }
         public Builder descTextSize(float sp) { this.descTextSizeSp = sp; return this; }
-        public Builder titleTypeface(@NonNull Typeface typeface) { this.titleTypeface = typeface; return this; }
-        public Builder descTypeface(@NonNull Typeface typeface) { this.descTypeface = typeface; return this; }
-        public Builder buttonBackgroundColor(@ColorInt int color) { this.buttonBackgroundColor = color; return this; }
-        public Builder buttonTextColor(@ColorInt int color) { this.buttonTextColor = color; return this; }
+        public Builder titleTypeface(Typeface typeface) { this.titleTypeface = typeface; return this; }
+        public Builder descTypeface(Typeface typeface) { this.descTypeface = typeface; return this; }
+        public Builder buttonBackgroundColor(int color) { this.buttonBackgroundColor = color; return this; }
+        public Builder buttonTextColor(int color) { this.buttonTextColor = color; return this; }
         public Builder buttonCornerRadius(float dp) { this.buttonCornerRadiusDp = dp; return this; }
-        public Builder nextButtonLabel(@NonNull String label) { this.nextButtonLabel = label; return this; }
-        public Builder finishButtonLabel(@NonNull String label) { this.finishButtonLabel = label; return this; }
+        public Builder nextButtonLabel(String label) { this.nextButtonLabel = label; return this; }
+        public Builder finishButtonLabel(String label) { this.finishButtonLabel = label; return this; }
         public Builder showSkipButton(boolean show) { this.showSkipButton = show; return this; }
-        public Builder skipButtonLabel(@NonNull String label) { this.skipButtonLabel = label; return this; }
+        public Builder skipButtonLabel(String label) { this.skipButtonLabel = label; return this; }
         public Builder showArrow(boolean show) { this.showArrow = show; return this; }
-        public Builder arrowColor(@ColorInt int color) { this.arrowColor = color; return this; }
+        public Builder arrowColor(int color) { this.arrowColor = color; return this; }
         public Builder arrowSize(float dp) { this.arrowSizeDp = dp; return this; }
         public Builder showStepIndicator(boolean show) { this.showStepIndicator = show; return this; }
-        public Builder stepIndicatorColors(@ColorInt int active, @ColorInt int inactive) { this.stepIndicatorActiveColor = active; this.stepIndicatorInactiveColor = inactive; return this; }
+        public Builder stepIndicatorColors(int active, int inactive) { this.stepIndicatorActiveColor = active; this.stepIndicatorInactiveColor = inactive; return this; }
         public Builder stepIndicatorSize(float dp) { this.stepIndicatorSizeDp = dp; return this; }
         public Builder respectReducedMotion(boolean respect) { this.respectReducedMotion = respect; return this; }
         public FocoraTheme build() { return new FocoraTheme(this); }

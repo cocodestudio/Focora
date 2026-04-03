@@ -7,9 +7,6 @@ import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 class ArrowDrawable extends Drawable {
     public enum Direction { UP, DOWN, LEFT, RIGHT }
 
@@ -29,7 +26,7 @@ class ArrowDrawable extends Drawable {
     }
 
     @Override
-    public void draw(@NonNull Canvas canvas) {
+    public void draw(Canvas canvas) {
         int w = getBounds().width();
         int h = getBounds().height();
         path.reset();
@@ -49,6 +46,6 @@ class ArrowDrawable extends Drawable {
     }
 
     @Override public void setAlpha(int alpha) { paint.setAlpha(alpha); }
-    @Override public void setColorFilter(@Nullable ColorFilter colorFilter) { paint.setColorFilter(colorFilter); }
+    @Override public void setColorFilter(ColorFilter colorFilter) { paint.setColorFilter(colorFilter); }
     @Override public int getOpacity() { return PixelFormat.TRANSLUCENT; }
 }

@@ -1,8 +1,6 @@
 package com.cocode.focora;
 
 import android.view.View;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 public final class FocoraStep {
     private final View target;
@@ -37,8 +35,8 @@ public final class FocoraStep {
     public AnimationStyle getAnimationStyle() { return animationStyle; }
     public float getCustomCornerRadiusDp() { return customCornerRadiusDp; }
     public boolean isDismissOnTapOutside() { return dismissOnTapOutside; }
-    @Nullable public Runnable getOnStepShownAction() { return onStepShownAction; }
-    @Nullable public View getCustomTooltipView() { return customTooltipView; }
+    public Runnable getOnStepShownAction() { return onStepShownAction; }
+    public View getCustomTooltipView() { return customTooltipView; }
 
     public static final class Builder {
         private final View target;
@@ -52,16 +50,16 @@ public final class FocoraStep {
         private Runnable onStepShownAction = null;
         private View customTooltipView = null;
 
-        public Builder(@NonNull View target) { this.target = target; }
-        public Builder title(@NonNull String title) { this.title = title; return this; }
-        public Builder description(@NonNull String description) { this.description = description; return this; }
-        public Builder shape(@NonNull FocoraShape shape) { this.shape = shape; return this; }
-        public Builder tooltipPosition(@NonNull TooltipPosition position) { this.tooltipPosition = position; return this; }
-        public Builder animationStyle(@NonNull AnimationStyle style) { this.animationStyle = style; return this; }
+        public Builder(View target) { this.target = target; }
+        public Builder title(String title) { this.title = title; return this; }
+        public Builder description(String description) { this.description = description; return this; }
+        public Builder shape(FocoraShape shape) { this.shape = shape; return this; }
+        public Builder tooltipPosition(TooltipPosition position) { this.tooltipPosition = position; return this; }
+        public Builder animationStyle(AnimationStyle style) { this.animationStyle = style; return this; }
         public Builder cornerRadius(float dp) { this.customCornerRadiusDp = dp; return this; }
         public Builder dismissOnTapOutside(boolean dismiss) { this.dismissOnTapOutside = dismiss; return this; }
-        public Builder onShown(@Nullable Runnable action) { this.onStepShownAction = action; return this; }
-        public Builder customTooltipView(@Nullable View view) { this.customTooltipView = view; return this; }
+        public Builder onShown(Runnable action) { this.onStepShownAction = action; return this; }
+        public Builder customTooltipView(View view) { this.customTooltipView = view; return this; }
         public FocoraStep build() { return new FocoraStep(this); }
     }
 }

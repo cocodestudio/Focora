@@ -1,15 +1,12 @@
 package com.cocode.focora;
 
 import android.app.Activity;
+import android.app.Application;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.DefaultLifecycleObserver;
-import androidx.lifecycle.LifecycleOwner;
 
 import com.cocode.focora.internal.FocoraOverlayView;
 import com.cocode.focora.internal.FocoraPrefs;
@@ -18,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class Focora {
+
     private final Activity activity;
     private final List<FocoraStep> steps;
     private final FocoraTheme theme;
@@ -27,7 +25,6 @@ public final class Focora {
     private final boolean dismissOnTapOutside;
     private final long startDelayMs;
     private final FocoraListener listener;
-    private final LifecycleOwner lifecycleOwner;
     private final AnimationStyle globalAnimationStyle;
 
     private int currentStepIndex = 0;
@@ -45,8 +42,9 @@ public final class Focora {
         this.dismissOnTapOutside = b.dismissOnTapOutside;
         this.startDelayMs = b.startDelayMs;
         this.listener = b.listener;
-        this.lifecycleOwner = b.lifecycleOwner;
         this.globalAnimationStyle = b.globalAnimationStyle;
+
+        attachLifecycle();
     }
 
     public void start() {
@@ -58,8 +56,6 @@ public final class Focora {
         }
 
         if (tutorialKey != null && FocoraPrefs.hasCompleted(activity, tutorialKey)) return;
-
-        if (lifecycleOwner != null) attachLifecycle();
 
         if (startDelayMs > 0) {
             mainHandler.postDelayed(this::beginFirstStep, startDelayMs);
@@ -83,7 +79,7 @@ public final class Focora {
         if (isRunning) completeSession();
     }
 
-    public static void reset(@NonNull Activity context, @NonNull String tutorialKey) {
+    public static void reset(Activity context, String tutorialKey) {
         FocoraPrefs.reset(context, tutorialKey);
     }
 
@@ -107,7 +103,6 @@ public final class Focora {
         View target = step.getTarget();
 
         if (target == null || target.getVisibility() != View.VISIBLE) {
-            Log.w("Focora", "Skipping step " + index + " — target is not visible.");
             currentStepIndex++;
             showStep(currentStepIndex);
             return;
@@ -148,8 +143,7 @@ public final class Focora {
             });
         }
 
-        boolean tapDismiss = step.isDismissOnTapOutside() || dismissOnTapOutside;
-        overlayView.setDismissOnTapOutside(tapDismiss);
+        overlayView.setDismissOnTapOutside(step.isDismissOnTapOutside() || dismissOnTapOutside);
     }
 
     private void onNextTapped() {
@@ -182,17 +176,27 @@ public final class Focora {
     }
 
     private void attachLifecycle() {
-        lifecycleOwner.getLifecycle().addObserver(new DefaultLifecycleObserver() {
+        if (activity == null || activity.getApplication() == null) return;
+        activity.getApplication().registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
+            @Override public void onActivityCreated(Activity a, Bundle b) {}
+            @Override public void onActivityStarted(Activity a) {}
+            @Override public void onActivityResumed(Activity a) {}
+            @Override public void onActivityPaused(Activity a) {}
+            @Override public void onActivityStopped(Activity a) {}
+            @Override public void onActivitySaveInstanceState(Activity a, Bundle b) {}
+
             @Override
-            public void onDestroy(@NonNull LifecycleOwner owner) {
-                mainHandler.removeCallbacksAndMessages(null);
-                if (overlayView != null) {
-                    ViewGroup root = activity.findViewById(android.R.id.content);
-                    if (root != null) root.removeView(overlayView);
-                    overlayView = null;
+            public void onActivityDestroyed(Activity a) {
+                if (a == activity) {
+                    activity.getApplication().unregisterActivityLifecycleCallbacks(this);
+                    if (overlayView != null) {
+                        ViewGroup root = activity.findViewById(android.R.id.content);
+                        if (root != null) root.removeView(overlayView);
+                        overlayView = null;
+                    }
+                    isRunning = false;
+                    mainHandler.removeCallbacksAndMessages(null);
                 }
-                isRunning = false;
-                owner.getLifecycle().removeObserver(this);
             }
         });
     }
@@ -207,30 +211,25 @@ public final class Focora {
         private boolean dismissOnTapOutside = false;
         private long startDelayMs = 0L;
         private FocoraListener listener = null;
-        private LifecycleOwner lifecycleOwner = null;
         private AnimationStyle globalAnimationStyle = AnimationStyle.EXPAND;
 
-        public Builder(@NonNull Activity activity) {
+        public Builder(Activity activity) {
             this.activity = activity;
-            if (activity instanceof LifecycleOwner) {
-                this.lifecycleOwner = (LifecycleOwner) activity;
-            }
         }
 
-        public Builder addStep(@NonNull FocoraStep step) { steps.add(step); return this; }
-        public Builder addStep(@NonNull View target, @NonNull String title, @NonNull String description) {
+        public Builder addStep(FocoraStep step) { steps.add(step); return this; }
+        public Builder addStep(View target, String title, String description) {
             steps.add(new FocoraStep.Builder(target).title(title).description(description).build());
             return this;
         }
-        public Builder theme(@NonNull FocoraTheme theme) { this.theme = theme; return this; }
-        public Builder tutorialKey(@NonNull String key) { this.tutorialKey = key; return this; }
+        public Builder theme(FocoraTheme theme) { this.theme = theme; return this; }
+        public Builder tutorialKey(String key) { this.tutorialKey = key; return this; }
         public Builder resetOnStart(boolean reset) { this.resetOnStart = reset; return this; }
         public Builder dismissOnBackPress(boolean dismiss) { this.dismissOnBackPress = dismiss; return this; }
         public Builder dismissOnTapOutside(boolean dismiss) { this.dismissOnTapOutside = dismiss; return this; }
         public Builder startDelay(long ms) { this.startDelayMs = ms; return this; }
-        public Builder listener(@NonNull FocoraListener listener) { this.listener = listener; return this; }
-        public Builder lifecycleOwner(@NonNull LifecycleOwner owner) { this.lifecycleOwner = owner; return this; }
-        public Builder animationStyle(@NonNull AnimationStyle style) { this.globalAnimationStyle = style; return this; }
+        public Builder listener(FocoraListener listener) { this.listener = listener; return this; }
+        public Builder animationStyle(AnimationStyle style) { this.globalAnimationStyle = style; return this; }
 
         public Focora build() {
             if (steps.isEmpty()) throw new IllegalStateException("Focora: No steps added.");
