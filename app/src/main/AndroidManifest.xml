@@ -11,15 +11,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FocoraLibrary">
+
+        <!-- Main launcher: Demo Menu -->
         <activity
-            android:name=".MainActivity"
+            android:name=".DemoMenuActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Original MainActivity kept for reference -->
+        <activity android:name=".MainActivity" android:exported="false" />
+
+        <!-- Showcase Activities -->
+        <activity android:name=".ShowcaseActivity" android:exported="false" />
+        <activity android:name=".ShapesShowcaseActivity" android:exported="false" />
+        <activity android:name=".AnimationsShowcaseActivity" android:exported="false" />
+        <activity android:name=".PositionsShowcaseActivity" android:exported="false" />
+        <activity android:name=".ThemesShowcaseActivity" android:exported="false" />
+        <activity android:name=".IndicatorsShowcaseActivity" android:exported="false" />
+
     </application>
 
 </manifest>

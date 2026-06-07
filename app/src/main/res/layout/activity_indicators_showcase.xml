@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F7FA"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#6200EE"
+        android:text="Step Indicators"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="20dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Compare dots vs text progress indicators"
+        android:textColor="#888888"
+        android:textSize="13sp"
+        android:gravity="center"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp" />
+
+    <!-- Target views for the indicator demos -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="24dp"
+        android:weightSum="2">
+
+        <ImageView
+            android:id="@+id/ivTarget1"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:background="@android:drawable/sym_def_app_icon" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardTarget2"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="#FFFFFF">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                android:gravity="center">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Step 2" android:textColor="#6200EE" android:textStyle="bold"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="12dp"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btnTarget3"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="Step 3"
+            android:textAllCaps="false"
+            android:backgroundTint="#03DAC5"
+            android:textColor="#000000"
+            app:cornerRadius="20dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabTarget4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="48dp"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_input_add"
+            app:backgroundTint="#6200EE"
+            app:tint="#FFFFFF" />
+    </LinearLayout>
+
+    <View android:layout_width="match_parent" android:layout_height="1dp"
+        android:background="#EEEEEE" android:layout_marginHorizontal="24dp" android:layout_marginTop="24dp" android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp">
+
+        <Button
+            android:id="@+id/btnDots"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="12dp"
+            android:text="● ● ●  Dots Style (4 steps)"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:backgroundTint="#6200EE"
+            app:cornerRadius="999dp" />
+
+        <Button
+            android:id="@+id/btnText"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="1 of 4  Text Style (4 steps)"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:backgroundTint="#03DAC5"
+            android:textColor="#000000"
+            app:cornerRadius="999dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

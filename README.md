@@ -93,7 +93,8 @@ Most feature discovery libraries give you a basic spotlight and a text box. Foco
 ---
 
 ## Preview
-<video src="https://github.com/user-attachments/assets/a91936e8-737f-46a4-b84b-38f9aa8daf8d" width="100%" autoplay loop muted playsinline></video>
+
+<video src="previews/hero_section_4_step_tour.mp4" width="100%" autoplay loop muted playsinline></video>
 
 ## Installation
 
@@ -123,7 +124,7 @@ dependencyResolutionManagement {
 
 ```gradle
 dependencies {
-    implementation 'com.github.cocodestudio:Focora:1.0.4'
+    implementation 'com.github.cocodestudio:Focora:1.0.5'
 }
 ```
 
@@ -267,6 +268,15 @@ FocoraTheme.defaultLight()
 FocoraTheme.defaultDark()
 ```
 
+<p align="center">
+  <img src="previews/light_theme.jpg" width="32%" alt="Light theme" />
+  <img src="previews/dark_theme.jpg" width="32%" alt="Dark theme" />
+  <img src="previews/custom_theme.jpg" width="32%" alt="Custom theme" />
+</p>
+<p align="center">
+  <sub>Default Light &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Default Dark &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Custom Theme</sub>
+</p>
+
 ### `FocoraTheme.Builder` Full Reference
 
 | Method | Type | Default | Description |
@@ -334,6 +344,8 @@ new Focora.Builder(this)
 | `SLIDE` | Focora slides in from the direction of the previous step's position on screen. |
 | `NONE` | Instant cut. No animation whatsoever. Recommended when `respectReducedMotion` detects the user has disabled system animations. |
 
+<video src="previews/animation_target_previews.mp4" width="100%" autoplay loop muted playsinline></video>
+
 ---
 
 ## Focora Shapes
@@ -352,6 +364,16 @@ new FocoraStep.Builder(view)
 | `RECT` | Sharp rectangle with zero rounding. Best for image previews or grid items. |
 
 Focora **morphs the spotlight shape smoothly** as steps advance — so going from a `CIRCLE` step to a `PILL` step animates the cutout continuously.
+
+<p align="center">
+  <img src="previews/circle_spotlight_shape.jpg" width="24%" alt="CIRCLE shape" />
+  <img src="previews/rounded_rect_spotlight_shape.jpg" width="24%" alt="ROUNDED_RECT shape" />
+  <img src="previews/pill_spotlight_shape.jpg" width="24%" alt="PILL shape" />
+  <img src="previews/rect_spotlight_shape.jpg" width="24%" alt="RECT shape" />
+</p>
+<p align="center">
+  <sub>CIRCLE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ROUNDED_RECT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PILL &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RECT</sub>
+</p>
 
 ---
 
@@ -372,6 +394,34 @@ new FocoraStep.Builder(view)
 | `RIGHT` | Tooltip is placed to the right of the spotlight. |
 
 The arrow pointer automatically flips direction to match the tooltip position.
+
+<p align="center">
+  <img src="previews/below_tooltip_position_above_target.jpg" width="32%" alt="BELOW position" />
+  <img src="previews/above_tooltip_position_above_target.jpg" width="32%" alt="ABOVE position" />
+  <img src="previews/below_tooltip_position_below_target.jpg" width="32%" alt="BELOW on bottom target" />
+</p>
+<p align="center">
+  <img src="previews/left_tooltip_position.jpg" width="32%" alt="LEFT position" />
+  <img src="previews/right_tooltip_position.jpg" width="32%" alt="RIGHT position" />
+  <img src="previews/auto_tooltip_position.jpg" width="32%" alt="AUTO position" />
+</p>
+<p align="center">
+  <sub>BELOW (top target) &nbsp;&nbsp;&nbsp;&nbsp; ABOVE (bottom target) &nbsp;&nbsp;&nbsp;&nbsp; BELOW (bottom target) &nbsp;&nbsp;&nbsp;&nbsp; LEFT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RIGHT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AUTO</sub>
+</p>
+
+---
+
+## Step Indicators
+
+Choose between visual dots or textual indicators to show progress through your tutorial steps. Configurable via `FocoraTheme.Builder`.
+
+<p align="center">
+  <img src="previews/dot_steps.jpg" width="48%" alt="Dot indicators" />
+  <img src="previews/number_steps.jpg" width="48%" alt="Text indicators" />
+</p>
+<p align="center">
+  <sub>DOTS Style &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TEXT Style</sub>
+</p>
 
 ---
 
