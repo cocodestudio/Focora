@@ -428,17 +428,19 @@ new Focora.Builder(this)
 
 ### One-time tutorial
 
-Pass a `tutorialKey` and Focora persists the "seen" state automatically. The tutorial will never show again after the user completes or skips it.
+Pass a `tutorialKey` and Focora persists the "seen" state automatically. 
+
+**Smart Step Tracking (New!):** By default, Focora tracks *how many steps* the user has seen. If you update your app and add a new step to the end of an existing tutorial, returning users will **only see the new step**, while completely new users will see all of them! You no longer need to change your `tutorialKey` just because you added a step.
 
 ```java
 new Focora.Builder(this)
-    .tutorialKey("main_onboarding_v1")   // unique string key
-    .addStep(...)
+    .tutorialKey("main_onboarding")      // unique string key
+    .addStep(btn1, "Step 1", "Old")
+    .addStep(btn2, "Step 2", "New feature!") // Returning users skip to here automatically!
+    .showNewStepsOnly(true)              // Default is true. Set false to never show again after first completion.
     .build()
     .start();
 ```
-
-Increment the key (e.g., `"main_onboarding_v2"`) to re-show the tutorial after a significant app update.
 
 ### Start delay
 
@@ -656,6 +658,7 @@ new Focora.Builder(Activity activity)
 | `addStep(View, String, String)` | `Builder` | Shorthand: add a default rounded-rect step |
 | `theme(FocoraTheme)` | `Builder` | Apply a custom theme to all steps |
 | `tutorialKey(String)` | `Builder` | Key for "seen" persistence. Omit to always show. |
+| `showNewStepsOnly(boolean)` | `Builder` | If true (default), returning users only see newly added steps. |
 | `resetOnStart(boolean)` | `Builder` | Clear the seen flag every time `start()` is called |
 | `dismissOnBackPress(boolean)` | `Builder` | Allow back press to dismiss. Default: `true` |
 | `dismissOnTapOutside(boolean)` | `Builder` | Tap outside spotlight to dismiss. Default: `false` |

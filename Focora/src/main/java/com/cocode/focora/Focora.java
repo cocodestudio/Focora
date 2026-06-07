@@ -26,6 +26,7 @@ public final class Focora {
     private final long startDelayMs;
     private final FocoraListener listener;
     private final AnimationStyle globalAnimationStyle;
+    private final boolean showNewStepsOnly;
 
     private int currentStepIndex = 0;
     private FocoraOverlayView overlayView;
@@ -43,6 +44,7 @@ public final class Focora {
         this.startDelayMs = b.startDelayMs;
         this.listener = b.listener;
         this.globalAnimationStyle = b.globalAnimationStyle;
+        this.showNewStepsOnly = b.showNewStepsOnly;
 
         attachLifecycle();
     }
@@ -55,7 +57,21 @@ public final class Focora {
             FocoraPrefs.reset(activity, tutorialKey);
         }
 
-        if (tutorialKey != null && FocoraPrefs.hasCompleted(activity, tutorialKey)) return;
+        if (tutorialKey != null) {
+            boolean hasCompleted = FocoraPrefs.hasCompleted(activity, tutorialKey);
+            int seenSteps = FocoraPrefs.getSeenStepCount(activity, tutorialKey);
+
+            if (showNewStepsOnly) {
+                if (seenSteps > 0) {
+                    if (seenSteps >= steps.size()) return;
+                    currentStepIndex = seenSteps;
+                } else if (hasCompleted) {
+                    return;
+                }
+            } else {
+                if (hasCompleted) return;
+            }
+        }
 
         if (startDelayMs > 0) {
             mainHandler.postDelayed(this::beginFirstStep, startDelayMs);
@@ -88,9 +104,8 @@ public final class Focora {
     public int getCurrentStepIndex() { return isRunning ? currentStepIndex : -1; }
 
     private void beginFirstStep() {
-        currentStepIndex = 0;
         isRunning = true;
-        showStep(0);
+        showStep(currentStepIndex);
     }
 
     private void showStep(int index) {
@@ -159,7 +174,10 @@ public final class Focora {
 
     private void completeSession() {
         isRunning = false;
-        if (tutorialKey != null) FocoraPrefs.markCompleted(activity, tutorialKey);
+        if (tutorialKey != null) {
+            int currentSaved = FocoraPrefs.getSeenStepCount(activity, tutorialKey);
+            FocoraPrefs.setSeenStepCount(activity, tutorialKey, Math.max(currentSaved, steps.size()));
+        }
 
         if (overlayView != null) {
             overlayView.animateExit(() -> {
@@ -212,6 +230,7 @@ public final class Focora {
         private long startDelayMs = 0L;
         private FocoraListener listener = null;
         private AnimationStyle globalAnimationStyle = AnimationStyle.EXPAND;
+        private boolean showNewStepsOnly = true;
 
         public Builder(Activity activity) {
             this.activity = activity;
@@ -230,6 +249,7 @@ public final class Focora {
         public Builder startDelay(long ms) { this.startDelayMs = ms; return this; }
         public Builder listener(FocoraListener listener) { this.listener = listener; return this; }
         public Builder animationStyle(AnimationStyle style) { this.globalAnimationStyle = style; return this; }
+        public Builder showNewStepsOnly(boolean showNew) { this.showNewStepsOnly = showNew; return this; }
 
         public Focora build() {
             if (steps.isEmpty()) throw new IllegalStateException("Focora: No steps added.");
