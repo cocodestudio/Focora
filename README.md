@@ -79,7 +79,7 @@ Most feature discovery libraries give you a basic spotlight and a text box. Foco
 - **Touch forwarding** — taps inside the spotlight reach the actual view underneath
 - **Back press handling** — configurable dismiss-on-back behavior
 - **Outside tap dismiss** — optional per-session and per-step
-- **Step indicator dots** — animated dot row showing progress
+- **Step indicators** — animated dot row or auto-incrementing text ("1 of 3") showing progress
 - **Skip button** — optional, fully labeled
 - **Arrow pointer** — triangular arrow connecting tooltip to spotlight
 - **Start delay** — delay before overlay appears
@@ -229,8 +229,10 @@ FocoraTheme theme = new FocoraTheme.Builder()
         .arrowColor(Color.WHITE)                         // 0 = matches tooltip background
         .arrowSize(10f)                                  // dp
 
-        // Step indicator dots
+        // Step indicators (Dots or Text)
         .showStepIndicator(true)
+        .stepIndicatorStyle(StepIndicatorStyle.DOTS)     // DOTS or TEXT
+        .stepIndicatorTextFormat("%d of %d")             // When using TEXT style
         .stepIndicatorColors(
                 Color.parseColor("#6200EE"),                 // active dot color
                 Color.parseColor("#CCCCCC")                  // inactive dot color
@@ -276,23 +278,32 @@ FocoraTheme.defaultDark()
 | `tooltipCornerRadius(float)` | dp | `20f` | Tooltip card corner rounding |
 | `tooltipElevation(float)` | dp | `8f` | Card shadow elevation |
 | `tooltipMaxWidth(int)` | dp | `280` | Max width of the tooltip card. `0` = unlimited |
+| `titleTextAppearance(int)` | `@StyleRes` | none | Standard Android text appearance for the title |
 | `titleTextColor(int)` | `@ColorInt` | `#1A1A1A` | Title text color |
 | `titleTextSize(float)` | sp | `16f` | Title font size |
 | `titleTypeface(Typeface)` | Typeface | bold | Custom typeface for the title |
+| `descTextAppearance(int)` | `@StyleRes` | none | Standard Android text appearance for the description |
 | `descTextColor(int)` | `@ColorInt` | `#666666` | Description text color |
 | `descTextSize(float)` | sp | `13f` | Description font size |
 | `descTypeface(Typeface)` | Typeface | normal | Custom typeface for the description |
 | `buttonBackgroundColor(int)` | `@ColorInt` | `#6200EE` | Next/Finish button background |
+| `nextButtonTextAppearance(int)` | `@StyleRes` | none | Standard Android text appearance for Next/Finish button |
 | `buttonTextColor(int)` | `@ColorInt` | `#FFFFFF` | Next/Finish button text color |
 | `buttonCornerRadius(float)` | dp | `999f` | Button corner radius |
+| `nextButtonTypeface(Typeface)` | Typeface | bold | Custom typeface for the Next/Finish button |
 | `nextButtonLabel(String)` | String | `"Next"` | Label for the advance button |
 | `finishButtonLabel(String)` | String | `"Got it"` | Label on the last step |
 | `showSkipButton(boolean)` | boolean | `true` | Whether to show the Skip button |
+| `skipButtonTextAppearance(int)` | `@StyleRes` | none | Standard Android text appearance for the Skip button |
+| `skipButtonTypeface(Typeface)` | Typeface | normal | Custom typeface for the Skip button |
 | `skipButtonLabel(String)` | String | `"Skip"` | Skip button text |
 | `showArrow(boolean)` | boolean | `true` | Whether to draw the pointer arrow |
 | `arrowColor(int)` | `@ColorInt` | `0` | Arrow color. `0` inherits tooltip background color |
 | `arrowSize(float)` | dp | `10f` | Arrow triangle size |
-| `showStepIndicator(boolean)` | boolean | `true` | Whether to show dot progress indicators |
+| `showStepIndicator(boolean)` | boolean | `true` | Whether to show step progress indicators |
+| `stepIndicatorStyle(StepIndicatorStyle)` | enum | `DOTS` | Progress indicator style (`DOTS` or `TEXT`) |
+| `stepIndicatorTextFormat(String)` | String | `"%d of %d"` | Format for text indicator, e.g., "Step %d of %d" |
+| `stepIndicatorTextAppearance(int)` | `@StyleRes` | none | Standard Android text appearance for text indicator |
 | `stepIndicatorColors(int, int)` | `@ColorInt` x2 | purple / grey | Active and inactive dot colors |
 | `stepIndicatorSize(float)` | dp | `6f` | Dot diameter |
 | `respectReducedMotion(boolean)` | boolean | `true` | Skip animations if system animations are disabled |
