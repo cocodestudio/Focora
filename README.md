@@ -93,7 +93,7 @@ Most feature discovery libraries give you a basic spotlight and a text box. Foco
 ---
 
 ## Preview
-<video src="https://raw.githubusercontent.com/cocodestudio/Focora/main/previews/hero_section_4_step_tour.mp4" width="100%" autoplay loop muted playsinline></video>
+<video src="https://github.com/user-attachments/assets/ea637c20-0899-4a31-b5b2-c7c5273e77be" width="100%" autoplay loop muted playsinline></video>
 
 ## Installation
 
@@ -343,7 +343,7 @@ new Focora.Builder(this)
 | `SLIDE` | Focora slides in from the direction of the previous step's position on screen. |
 | `NONE` | Instant cut. No animation whatsoever. Recommended when `respectReducedMotion` detects the user has disabled system animations. |
 
-<video src="https://raw.githubusercontent.com/cocodestudio/Focora/main/previews/animation_target_previews.mp4" width="100%" autoplay loop muted playsinline></video>
+<video src="https://github.com/user-attachments/assets/0e07505c-47e5-4e0d-99c2-755de449651e" width="100%" autoplay loop muted playsinline></video>
 
 ---
 
