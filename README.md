@@ -714,7 +714,6 @@ new Focora.Builder(Activity activity)
 | `startDelay(long)` | `Builder` | Delay in ms before the overlay appears |
 | `animationStyle(AnimationStyle)` | `Builder` | Global animation style for all steps |
 | `listener(FocoraListener)` | `Builder` | Register lifecycle callbacks |
-| `lifecycleOwner(LifecycleOwner)` | `Builder` | Override lifecycle owner for auto-cleanup |
 | `build()` | `Focora` | Build the configured instance |
 
 ### `Focora` Instance Methods
@@ -793,7 +792,7 @@ public interface FocoraListener {
 ## FAQ
 
 **Q: Does Focora work with Fragments?**  
-A: Yes. Pass `getActivity()` as the `Activity` parameter. For lifecycle binding, pass `this` (the Fragment) as the `lifecycleOwner`. The overlay is attached to the Activity's content view, so it renders above the Fragment correctly.
+A: Yes. Pass `getActivity()` as the `Activity` parameter. The overlay is attached to the Activity's content view, so it renders above the Fragment correctly. Focora binds to the Activity lifecycle and will auto-cleanup when the Activity is destroyed. To dismiss it when the Fragment's view is destroyed, simply call `focora.dismiss()` in your Fragment's `onDestroyView()`.
 
 **Q: Does Focora conflict with my Material3 theme?**  
 A: No. Focora uses zero Material theme attributes. The tooltip is 100% programmatic with its own colors.
