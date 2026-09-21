@@ -5,3 +5,4 @@
 -keep enum com.cocode.focora.FocoraShape { *; }
 -keep enum com.cocode.focora.TooltipPosition { *; }
 -keep enum com.cocode.focora.AnimationStyle { *; }
+-keep enum com.cocode.focora.StepIndicatorStyle { *; }

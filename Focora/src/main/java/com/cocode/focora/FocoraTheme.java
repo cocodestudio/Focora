@@ -1,6 +1,5 @@
 package com.cocode.focora;
 
-import android.graphics.Color;
 import android.graphics.Typeface;
 
 public final class FocoraTheme {
@@ -42,6 +41,9 @@ public final class FocoraTheme {
     private final int stepIndicatorInactiveColor;
     private final float stepIndicatorSizeDp;
     private final boolean respectReducedMotion;
+    private final boolean pulseRingsEnabled;
+    private final int pulseRingColor;
+    private final float pulseRingMaxRadiusDp;
 
     private FocoraTheme(Builder b) {
         this.overlayColor = b.overlayColor;
@@ -82,6 +84,9 @@ public final class FocoraTheme {
         this.stepIndicatorInactiveColor = b.stepIndicatorInactiveColor;
         this.stepIndicatorSizeDp = b.stepIndicatorSizeDp;
         this.respectReducedMotion = b.respectReducedMotion;
+        this.pulseRingsEnabled = b.pulseRingsEnabled;
+        this.pulseRingColor = b.pulseRingColor != 0 ? b.pulseRingColor : (b.spotlightBorderColor != 0 ? b.spotlightBorderColor : 0x78FFFFFF);
+        this.pulseRingMaxRadiusDp = b.pulseRingMaxRadiusDp;
     }
 
     public int getOverlayColor() { return overlayColor; }
@@ -122,39 +127,42 @@ public final class FocoraTheme {
     public int getStepIndicatorInactiveColor() { return stepIndicatorInactiveColor; }
     public float getStepIndicatorSizeDp() { return stepIndicatorSizeDp; }
     public boolean isRespectReducedMotion() { return respectReducedMotion; }
+    public boolean isPulseRingsEnabled() { return pulseRingsEnabled; }
+    public int getPulseRingColor() { return pulseRingColor; }
+    public float getPulseRingMaxRadiusDp() { return pulseRingMaxRadiusDp; }
 
     public static FocoraTheme defaultLight() { return new Builder().build(); }
     public static FocoraTheme defaultDark() {
         return new Builder()
-                .overlayColor(Color.argb(180, 0, 0, 0))
-                .tooltipBackgroundColor(Color.parseColor("#1E1E1E"))
-                .titleTextColor(Color.WHITE)
-                .descTextColor(Color.parseColor("#AAAAAA"))
-                .buttonBackgroundColor(Color.parseColor("#BB86FC"))
-                .buttonTextColor(Color.BLACK)
+                .overlayColor(0xB4000000)
+                .tooltipBackgroundColor(0xFF1E1E1E)
+                .titleTextColor(0xFFFFFFFF)
+                .descTextColor(0xFFAAAAAA)
+                .buttonBackgroundColor(0xFFBB86FC)
+                .buttonTextColor(0xFF000000)
                 .build();
     }
 
     public static final class Builder {
-        private int overlayColor = Color.argb(204, 0, 0, 0);
+        private int overlayColor = 0xCC000000;
         private int spotlightBorderColor = 0;
         private float spotlightBorderWidth = 0f;
         private float spotlightPaddingDp = 8f;
-        private int tooltipBackgroundColor = Color.WHITE;
+        private int tooltipBackgroundColor = 0xFFFFFFFF;
         private float tooltipCornerRadiusDp = 20f;
         private float tooltipElevationDp = 8f;
         private int tooltipMaxWidthDp = 280;
         private int titleTextAppearanceRes = 0;
-        private int titleTextColor = Color.parseColor("#1A1A1A");
+        private int titleTextColor = 0xFF1A1A1A;
         private float titleTextSizeSp = 16f;
         private int descTextAppearanceRes = 0;
-        private int descTextColor = Color.parseColor("#666666");
+        private int descTextColor = 0xFF666666;
         private float descTextSizeSp = 13f;
         private Typeface titleTypeface = null;
         private Typeface descTypeface = null;
-        private int buttonBackgroundColor = Color.parseColor("#6200EE");
+        private int buttonBackgroundColor = 0xFF6200EE;
         private int nextButtonTextAppearanceRes = 0;
-        private int buttonTextColor = Color.WHITE;
+        private int buttonTextColor = 0xFFFFFFFF;
         private float buttonCornerRadiusDp = 999f;
         private Typeface nextButtonTypeface = null;
         private String nextButtonLabel = "Next";
@@ -170,10 +178,13 @@ public final class FocoraTheme {
         private StepIndicatorStyle stepIndicatorStyle = StepIndicatorStyle.DOTS;
         private String stepIndicatorTextFormat = "%d of %d";
         private int stepIndicatorTextAppearanceRes = 0;
-        private int stepIndicatorActiveColor = Color.parseColor("#6200EE");
-        private int stepIndicatorInactiveColor = Color.parseColor("#CCCCCC");
+        private int stepIndicatorActiveColor = 0xFF6200EE;
+        private int stepIndicatorInactiveColor = 0xFFCCCCCC;
         private float stepIndicatorSizeDp = 6f;
         private boolean respectReducedMotion = true;
+        private boolean pulseRingsEnabled = false;
+        private int pulseRingColor = 0;
+        private float pulseRingMaxRadiusDp = 18f;
 
         public Builder overlayColor(int color) { this.overlayColor = color; return this; }
         public Builder spotlightBorder(int color, float widthPx) { this.spotlightBorderColor = color; this.spotlightBorderWidth = widthPx; return this; }
@@ -211,6 +222,9 @@ public final class FocoraTheme {
         public Builder stepIndicatorColors(int active, int inactive) { this.stepIndicatorActiveColor = active; this.stepIndicatorInactiveColor = inactive; return this; }
         public Builder stepIndicatorSize(float dp) { this.stepIndicatorSizeDp = dp; return this; }
         public Builder respectReducedMotion(boolean respect) { this.respectReducedMotion = respect; return this; }
+        public Builder pulseRings(boolean enabled) { this.pulseRingsEnabled = enabled; return this; }
+        public Builder pulseRingColor(int color) { this.pulseRingColor = color; return this; }
+        public Builder pulseRingMaxRadius(float dp) { this.pulseRingMaxRadiusDp = dp; return this; }
         public FocoraTheme build() { return new FocoraTheme(this); }
     }
 }

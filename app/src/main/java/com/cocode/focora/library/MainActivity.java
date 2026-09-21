@@ -56,7 +56,10 @@ public class MainActivity extends AppCompatActivity {
                 .buttonCornerRadius(50f)
                 .tooltipCornerRadius(24f)
                 .spotlightPadding(10f)
-//                .spotlightBorder(Color.parseColor("#3B82F6"), 4f) // Add a glowing blue border to the cutout
+                .spotlightBorder(Color.parseColor("#3B82F6"), 3f) // Glowing blue border to the cutout
+                .pulseRings(true) // Expanding radar pulse ring
+                .pulseRingColor(Color.argb(160, 59, 130, 246))
+                .pulseRingMaxRadius(18f)
                 .showStepIndicator(true)
                 .stepIndicatorColors(Color.BLACK, Color.GRAY)
                 .arrowColor(Color.BLACK)
@@ -88,12 +91,14 @@ public class MainActivity extends AppCompatActivity {
                         .animationStyle(AnimationStyle.EXPAND)
                         .build())
 
-                // STEP 3: Show off the PILL shape and PULSE animation
+                // STEP 3: Show off the PILL shape, advanceOnTargetTap, and click callback
                 .addStep(new FocoraStep.Builder(btnUpgrade)
                         .title("Unlock Premium")
-                        .description("Get access to advanced features and priority support by upgrading to Pro.")
+                        .description("Tap directly on this button or press Next to proceed.")
                         .shape(FocoraShape.PILL)
-                        .animationStyle(AnimationStyle.EXPAND) // Draws attention to the CTA
+                        .animationStyle(AnimationStyle.EXPAND)
+                        .advanceOnTargetTap(true) // User can tap the button directly to advance
+                        .onTargetClicked(() -> Toast.makeText(this, "Target clicked! Proceeding to next step.", Toast.LENGTH_SHORT).show())
                         .build())
 
                 // STEP 4: Small target, auto-positioning, showing the Finish button
@@ -120,11 +125,5 @@ public class MainActivity extends AppCompatActivity {
 
         // 4. Start the tutorial automatically when the activity opens
         focoraTutorial.start();
-
-//        btnStartTour.setOnClickListener(v -> {
-//            if (!focoraTutorial.isRunning()) {
-//                focoraTutorial.start();
-//            }
-//        });
     }
 }

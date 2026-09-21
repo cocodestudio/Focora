@@ -2,6 +2,7 @@ package com.cocode.focora;
 
 import android.app.Activity;
 import android.app.Application;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -23,6 +24,7 @@ public final class Focora {
     private final boolean resetOnStart;
     private final boolean dismissOnBackPress;
     private final boolean dismissOnTapOutside;
+    private final boolean advanceOnTargetTap;
     private final long startDelayMs;
     private final FocoraListener listener;
     private final AnimationStyle globalAnimationStyle;
@@ -41,6 +43,7 @@ public final class Focora {
         this.resetOnStart = b.resetOnStart;
         this.dismissOnBackPress = b.dismissOnBackPress;
         this.dismissOnTapOutside = b.dismissOnTapOutside;
+        this.advanceOnTargetTap = b.advanceOnTargetTap;
         this.startDelayMs = b.startDelayMs;
         this.listener = b.listener;
         this.globalAnimationStyle = b.globalAnimationStyle;
@@ -117,7 +120,17 @@ public final class Focora {
         FocoraStep step = steps.get(index);
         View target = step.getTarget();
 
-        if (target == null || target.getVisibility() != View.VISIBLE) {
+        if (target == null) {
+            if (step.hasVirtualTarget()) {
+                renderStep(step, index);
+            } else {
+                currentStepIndex++;
+                showStep(currentStepIndex);
+            }
+            return;
+        }
+
+        if (target.getVisibility() != View.VISIBLE) {
             currentStepIndex++;
             showStep(currentStepIndex);
             return;
@@ -147,18 +160,20 @@ public final class Focora {
             );
             ViewGroup root = activity.findViewById(android.R.id.content);
             root.addView(overlayView);
+            overlayView.setAdvanceOnTargetTap(step.isAdvanceOnTargetTap() || advanceOnTargetTap);
+            overlayView.setDismissOnTapOutside(step.isDismissOnTapOutside() || dismissOnTapOutside);
             overlayView.animateEntrance(step, index, anim, () -> {
                 if (listener != null) listener.onStepShown(index, step);
                 if (step.getOnStepShownAction() != null) step.getOnStepShownAction().run();
             });
         } else {
+            overlayView.setAdvanceOnTargetTap(step.isAdvanceOnTargetTap() || advanceOnTargetTap);
+            overlayView.setDismissOnTapOutside(step.isDismissOnTapOutside() || dismissOnTapOutside);
             overlayView.animateTransition(step, index, anim, () -> {
                 if (listener != null) listener.onStepShown(index, step);
                 if (step.getOnStepShownAction() != null) step.getOnStepShownAction().run();
             });
         }
-
-        overlayView.setDismissOnTapOutside(step.isDismissOnTapOutside() || dismissOnTapOutside);
     }
 
     private void onNextTapped() {
@@ -227,6 +242,7 @@ public final class Focora {
         private boolean resetOnStart = false;
         private boolean dismissOnBackPress = true;
         private boolean dismissOnTapOutside = false;
+        private boolean advanceOnTargetTap = false;
         private long startDelayMs = 0L;
         private FocoraListener listener = null;
         private AnimationStyle globalAnimationStyle = AnimationStyle.EXPAND;
@@ -241,11 +257,24 @@ public final class Focora {
             steps.add(new FocoraStep.Builder(target).title(title).description(description).build());
             return this;
         }
+        public Builder addStep(RectF targetRect, String title, String description) {
+            steps.add(new FocoraStep.Builder(targetRect).title(title).description(description).build());
+            return this;
+        }
+        public Builder addStep(float cx, float cy, float radiusPx, String title, String description) {
+            steps.add(new FocoraStep.Builder(cx, cy, radiusPx).title(title).description(description).build());
+            return this;
+        }
+        public Builder addStep(float left, float top, float right, float bottom, String title, String description) {
+            steps.add(new FocoraStep.Builder(left, top, right, bottom).title(title).description(description).build());
+            return this;
+        }
         public Builder theme(FocoraTheme theme) { this.theme = theme; return this; }
         public Builder tutorialKey(String key) { this.tutorialKey = key; return this; }
         public Builder resetOnStart(boolean reset) { this.resetOnStart = reset; return this; }
         public Builder dismissOnBackPress(boolean dismiss) { this.dismissOnBackPress = dismiss; return this; }
         public Builder dismissOnTapOutside(boolean dismiss) { this.dismissOnTapOutside = dismiss; return this; }
+        public Builder advanceOnTargetTap(boolean advance) { this.advanceOnTargetTap = advance; return this; }
         public Builder startDelay(long ms) { this.startDelayMs = ms; return this; }
         public Builder listener(FocoraListener listener) { this.listener = listener; return this; }
         public Builder animationStyle(AnimationStyle style) { this.globalAnimationStyle = style; return this; }

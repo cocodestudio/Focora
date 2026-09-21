@@ -5,12 +5,13 @@
   <a href="https://android-arsenal.com/api?level=23"><img src="https://img.shields.io/badge/API-23%2B-brightgreen.svg" alt="API Level" /></a>
   <a href="https://github.com/cocodestudio/Focora/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
   <a href="https://github.com/cocodestudio/Focora/releases"><img src="https://img.shields.io/github/v/release/cocodestudio/Focora" alt="Latest Release" /></a>
+  <a href="https://github.com/cocodestudio/Focora/releases"><img src="https://img.shields.io/badge/Demo_APK-Download-purple.svg?style=flat&logo=android" alt="Download Demo APK" /></a>
   <img src="https://img.shields.io/badge/Language-Java-orange.svg" alt="Java" />
 </p>
 
 <p align="center">
   <b>A premium, zero-dependency Android feature discovery library.</b><br/>
-  Shape-morphing spotlights. Fully animated. Deeply customizable. Drop in without changing a line of your existing code.
+  Shape-morphing spotlights. Radar pulse aura. Fully animated. Deeply customizable. Drop in without changing a line of your existing code.
 </p>
 
 ---
@@ -18,6 +19,7 @@
 ## Table of Contents
 
 - [Why Focora](#why-Focora)
+- [Comparison Matrix](#comparison-matrix)
 - [Features](#features)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
@@ -30,11 +32,13 @@
 - [Session Controls](#session-controls)
 - [Accessibility](#accessibility)
 - [Advanced Usage](#advanced-usage)
+    - [Target Tap Advancement](#target-tap-advancement)
+    - [Radar Pulse Rings](#radar-pulse-rings)
+    - [Virtual Coordinate Targets](#virtual-coordinate-targets)
     - [Custom Tooltip View](#custom-tooltip-view)
     - [Dark Mode Theme](#dark-mode-theme)
     - [RTL Support](#rtl-support)
-    - [One-time Tutorial](#one-time-tutorial)
-    - [Debug / Reset Seen Flag](#debug--reset-seen-flag)
+    - [One-time Tutorial & Smart Step Resumption](#one-time-tutorial--smart-step-resumption)
     - [Programmatic Control](#programmatic-control)
 - [Full API Reference](#full-api-reference)
     - [Focora.Builder](#focorabuilder)
@@ -49,33 +53,38 @@
 
 ## Why Focora
 
-Most feature discovery libraries give you a basic spotlight and a text box. Focora was built differently:
+Most feature discovery libraries give you a basic spotlight and a text box, or force heavy dependencies into your project. Focora is designed for zero footprint, maximum performance, and premium aesthetics:
 
-| Concern | Others | Focora |
-|---|---|---|
-| Dependencies | Material, Kotlin, etc. | **None. Pure Java.** |
-| Tooltip | Hardcoded XML layout | **100% programmatic, fully themeable** |
-| Focora shapes | Rectangle only | **Rounded rect, circle, pill, rect** |
-| Animation | Fade in/out | **Expand, fade, pulse, slide, none** |
-| Lifecycle | Manual cleanup required | **Auto-detaches on Activity destroy** |
-| Touch forwarding | Blocks all touches | **Forwards taps through the spotlight** |
-| Fonts | Hardcoded font files | **Bring your own `Typeface`** |
-| RTL | Not supported | **Full RTL layout support** |
-| Accessibility | None | **TalkBack announcements built in** |
-| "Show once" | None or manual | **Built-in `tutorialKey` persistence** |
+### Comparison Matrix
+
+| Capability / Metric | Focora | Balloon | TapTargetView | ShowcaseView |
+|---|---|---|---|---|
+| **External Dependencies** | **Zero (Pure Android SDK)** | Kotlin + AndroidX | AndroidX Support | Support V4 / AndroidX |
+| **AAR Download Size** | **< 30 KB** | ~350 KB | ~120 KB | ~100 KB |
+| **Shape Morphing** | **Yes (Circle, Pill, Rect, Rounded)** | Tooltip only | Circle only | Circle / Rect |
+| **Programmatic UI** | **100% (Zero XML inflation)** | Layout inflation | Mixed | Layout inflation |
+| **Radar Pulse Aura** | **Yes (Concentric animated ring)** | No | No | No |
+| **Target Tap Advance** | **Yes (`advanceOnTargetTap`)** | No | Yes | No |
+| **Virtual Coordinate Targets** | **Yes (`RectF` / Point / Coord)** | View only | View only | View only |
+| **Smart Step Resumption** | **Built-in (`showNewStepsOnly`)** | Manual | None | None |
+| **Language Compatibility** | **Pure Java 11 / Kotlin** | Kotlin only | Java / Kotlin | Java / Kotlin |
+| **Min SDK** | **API 23 (Android 6.0+)** | API 21+ | API 14+ | API 14+ |
 
 ---
 
 ## Features
 
 - **Shape-morphing spotlight** — smoothly animates between rounded rect, circle, pill, and rect shapes as steps advance
+- **Radar pulse aura** — eye-catching expanding ripple rings around the spotlight cutout to draw immediate focus
+- **Target tap advancement** — allow users to proceed by tapping the highlighted UI element itself or clicking Next
+- **Virtual coordinate targeting** — highlight Canvas elements, Toolbar icons, or screen coordinates without a View instance
 - **4 animation styles** — Expand, Fade, Pulse, Slide, or None (for reduced motion)
 - **Fully programmatic tooltip** — no XML layouts, no resource conflicts with your app
 - **Deep theming** — colors, corner radius, elevation, text sizes, typefaces, button styles, arrow, step dots — all configurable
 - **Per-step customization** — each step can override shape, animation style, tooltip position, and corner radius independently
 - **Custom tooltip view** — replace the built-in tooltip with any `View` for a step
-- **One-time tutorial** — persist "seen" state automatically with a `tutorialKey`
-- **Lifecycle-aware** — automatically removes itself if the Activity is destroyed
+- **One-time tutorial & Smart Resumption** — persist "seen" state automatically with a `tutorialKey`, and resume only at newly added steps
+- **Lifecycle-aware** — automatically removes itself if the Activity is destroyed via `Application.ActivityLifecycleCallbacks`
 - **Touch forwarding** — taps inside the spotlight reach the actual view underneath
 - **Back press handling** — configurable dismiss-on-back behavior
 - **Outside tap dismiss** — optional per-session and per-step
@@ -123,7 +132,7 @@ dependencyResolutionManagement {
 
 ```gradle
 dependencies {
-    implementation 'com.github.cocodestudio:Focora:1.0.5'
+    implementation 'com.github.cocodestudio:Focora:1.0.6'
 }
 ```
 
@@ -315,6 +324,9 @@ FocoraTheme.defaultDark()
 | `stepIndicatorTextAppearance(int)` | `@StyleRes` | none | Standard Android text appearance for text indicator |
 | `stepIndicatorColors(int, int)` | `@ColorInt` x2 | purple / grey | Active and inactive dot colors |
 | `stepIndicatorSize(float)` | dp | `6f` | Dot diameter |
+| `pulseRings(boolean)` | boolean | `false` | Enable animated radar pulse ripple around spotlight |
+| `pulseRingColor(int)` | `@ColorInt` | white/border alpha | Color of the expanding pulse ring |
+| `pulseRingMaxRadius(float)` | dp | `18f` | Maximum expansion radius in dp |
 | `respectReducedMotion(boolean)` | boolean | `true` | Skip animations if system animations are disabled |
 
 ---
@@ -551,7 +563,68 @@ When `ANIMATOR_DURATION_SCALE` is `0` on the device, all spotlight and tooltip a
 
 ---
 
+---
+
 ## Advanced Usage
+
+### Target Tap Advancement
+
+Allow users to advance through steps by tapping the actual highlighted UI element on screen, or clicking Next:
+
+```java
+// Globally for all steps in the session
+new Focora.Builder(this)
+    .advanceOnTargetTap(true)
+    ...
+
+// Or per-step with a custom click action
+new FocoraStep.Builder(btnSend)
+    .title("Send Message")
+    .description("Tap directly on the Send button to continue.")
+    .advanceOnTargetTap(true)
+    .onTargetClicked(() -> {
+        // Optional action when user taps the spotlight target
+        doSendAction();
+    })
+    .build();
+```
+
+---
+
+### Radar Pulse Rings
+
+Add an animated concentric ripple/pulse ring expanding around the spotlight cutout to immediately capture the user's eye:
+
+```java
+FocoraTheme theme = new FocoraTheme.Builder()
+    .spotlightBorder(Color.parseColor("#3B82F6"), 3f) // Spotlight border stroke
+    .pulseRings(true)                                 // Enable expanding radar ripple
+    .pulseRingColor(Color.argb(160, 59, 130, 246))   // Color with alpha
+    .pulseRingMaxRadius(20f)                          // Maximum expansion distance in dp
+    .build();
+```
+
+---
+
+### Virtual Coordinate Targets
+
+Highlight coordinates, Canvas elements, or Toolbar overflow buttons without needing a physical `View` instance:
+
+```java
+// Target arbitrary bounds on the screen
+new FocoraStep.Builder(100f, 250f, 500f, 400f) // left, top, right, bottom (pixels)
+    .title("Canvas Drawing")
+    .description("Highlighting coordinates without a physical View.")
+    .build();
+
+// Or target a circular point (cx, cy, radius)
+new FocoraStep.Builder(screenWidth - 60f, 80f, 30f) // cx, cy, radiusPx
+    .title("Toolbar Overflow")
+    .description("Highlighting the overflow menu position directly.")
+    .build();
+```
+
+---
 
 ### Custom Tooltip View
 
@@ -704,13 +777,17 @@ new Focora.Builder(Activity activity)
 | Method | Returns | Description |
 |--------|---------|-------------|
 | `addStep(FocoraStep)` | `Builder` | Add a fully configured step |
-| `addStep(View, String, String)` | `Builder` | Shorthand: add a default rounded-rect step |
+| `addStep(View, String, String)` | `Builder` | Shorthand: add a default rounded-rect step for a View |
+| `addStep(RectF, String, String)` | `Builder` | Shorthand: add a step for a virtual target RectF |
+| `addStep(float, float, float, String, String)` | `Builder` | Shorthand: add a circular step for coordinates (cx, cy, radiusPx) |
+| `addStep(float, float, float, float, String, String)` | `Builder` | Shorthand: add a step for coordinates (left, top, right, bottom) |
 | `theme(FocoraTheme)` | `Builder` | Apply a custom theme to all steps |
 | `tutorialKey(String)` | `Builder` | Key for "seen" persistence. Omit to always show. |
 | `showNewStepsOnly(boolean)` | `Builder` | If true (default), returning users only see newly added steps. |
 | `resetOnStart(boolean)` | `Builder` | Clear the seen flag every time `start()` is called |
 | `dismissOnBackPress(boolean)` | `Builder` | Allow back press to dismiss. Default: `true` |
 | `dismissOnTapOutside(boolean)` | `Builder` | Tap outside spotlight to dismiss. Default: `false` |
+| `advanceOnTargetTap(boolean)` | `Builder` | Allow tapping the highlighted view to advance. Default: `false` |
 | `startDelay(long)` | `Builder` | Delay in ms before the overlay appears |
 | `animationStyle(AnimationStyle)` | `Builder` | Global animation style for all steps |
 | `listener(FocoraListener)` | `Builder` | Register lifecycle callbacks |
@@ -734,7 +811,13 @@ new Focora.Builder(Activity activity)
 ### `FocoraStep.Builder`
 
 ```java
+// Target a View
 new FocoraStep.Builder(View target)
+
+// Or target arbitrary coordinates without a View
+new FocoraStep.Builder(RectF rect)
+new FocoraStep.Builder(float cx, float cy, float radiusPx)
+new FocoraStep.Builder(float left, float top, float right, float bottom)
 ```
 
 | Method | Type | Default | Description |
@@ -746,6 +829,8 @@ new FocoraStep.Builder(View target)
 | `animationStyle(AnimationStyle)` | enum | global | Per-step animation override |
 | `cornerRadius(float)` | dp | `12f` | Used when shape is `ROUNDED_RECT` |
 | `dismissOnTapOutside(boolean)` | boolean | `false` | Per-step outside-tap dismiss |
+| `advanceOnTargetTap(boolean)` | boolean | `false` | Advance to next step when highlighted target is tapped |
+| `onTargetClicked(Runnable)` | Runnable | `null` | Action callback when highlighted target is tapped |
 | `onShown(Runnable)` | Runnable | `null` | Fires when step is fully visible |
 | `customTooltipView(View)` | View | `null` | Replace built-in tooltip for this step |
 | `build()` | `FocoraStep` | — | Build the step |

@@ -37,7 +37,11 @@ public class FocoraOverlayView extends FrameLayout {
     private final Runnable onNext;
     private final Runnable onSkip;
     private ValueAnimator currentAnimator;
+    private ValueAnimator pulseAnimator;
+    private float pulseFraction = 0f;
     private boolean dismissOnTapOutside = false;
+    private boolean advanceOnTargetTap = false;
+    private FocoraStep currentStep;
 
     public FocoraOverlayView(Context context, FocoraTheme theme, int totalSteps, boolean dismissOnBackPress, Runnable onNext, Runnable onSkip) {
         super(context);
@@ -65,6 +69,7 @@ public class FocoraOverlayView extends FrameLayout {
 
     public void animateEntrance(FocoraStep step, int stepIndex, AnimationStyle style, Runnable onComplete) {
         isAnimating = true;
+        this.currentStep = step;
         setupTooltipViewForStep(step);
         builtInTooltipView.setNextEnabled(false);
         builtInTooltipView.updateStep(step.getTitle(), step.getDescription(), stepIndex, totalSteps, stepIndex == totalSteps - 1);
@@ -83,6 +88,7 @@ public class FocoraOverlayView extends FrameLayout {
             runSpotlightAnimation(targetRect, targetRadius, getTargetBgAlpha(), style, () -> {
                 isAnimating = false;
                 builtInTooltipView.setNextEnabled(true);
+                startPulseAnimation();
                 announceForAccessibility(step.getTitle() + ". " + step.getDescription());
                 if (onComplete != null) onComplete.run();
             });
@@ -91,6 +97,7 @@ public class FocoraOverlayView extends FrameLayout {
 
     public void animateTransition(FocoraStep step, int stepIndex, AnimationStyle style, Runnable onComplete) {
         isAnimating = true;
+        this.currentStep = step;
         setupTooltipViewForStep(step);
         builtInTooltipView.setNextEnabled(false);
         builtInTooltipView.updateStep(step.getTitle(), step.getDescription(), stepIndex, totalSteps, stepIndex == totalSteps - 1);
@@ -105,6 +112,7 @@ public class FocoraOverlayView extends FrameLayout {
             runSpotlightAnimation(targetRect, targetRadius, getTargetBgAlpha(), style, () -> {
                 isAnimating = false;
                 builtInTooltipView.setNextEnabled(true);
+                startPulseAnimation();
                 announceForAccessibility(step.getTitle() + ". " + step.getDescription());
                 if (onComplete != null) onComplete.run();
             });
@@ -113,6 +121,11 @@ public class FocoraOverlayView extends FrameLayout {
 
     public void animateExit(Runnable onComplete) {
         isAnimating = true;
+        if (pulseAnimator != null) {
+            pulseAnimator.cancel();
+            pulseAnimator = null;
+        }
+        pulseFraction = 0f;
         RectF collapseTarget = new RectF(currentSpotlightRect.centerX(), currentSpotlightRect.centerY(), currentSpotlightRect.centerX(), currentSpotlightRect.centerY());
 
         activeTooltipView.animate().alpha(0f).scaleX(0.5f).scaleY(0.5f)
@@ -131,6 +144,25 @@ public class FocoraOverlayView extends FrameLayout {
 
     public void setDismissOnTapOutside(boolean dismiss) {
         this.dismissOnTapOutside = dismiss;
+    }
+
+    public void setAdvanceOnTargetTap(boolean advance) {
+        this.advanceOnTargetTap = advance;
+    }
+
+    private void startPulseAnimation() {
+        if (theme.isPulseRingsEnabled() && resolveMs(1200) > 0) {
+            if (pulseAnimator != null) pulseAnimator.cancel();
+            pulseAnimator = ValueAnimator.ofFloat(0f, 1f);
+            pulseAnimator.setDuration(resolveMs(1200));
+            pulseAnimator.setRepeatCount(ValueAnimator.INFINITE);
+            pulseAnimator.setRepeatMode(ValueAnimator.RESTART);
+            pulseAnimator.addUpdateListener(anim -> {
+                pulseFraction = (float) anim.getAnimatedValue();
+                invalidate();
+            });
+            pulseAnimator.start();
+        }
     }
 
     private void setupTooltipViewForStep(FocoraStep step) {
@@ -155,24 +187,30 @@ public class FocoraOverlayView extends FrameLayout {
     }
 
     private RectF calculateTargetRect(FocoraStep step) {
-        // Safe relative math for Sketchware Action Bar / Edge To Edge layouts
-        int[] targetLocation = new int[2];
-        step.getTarget().getLocationInWindow(targetLocation);
-
         int[] overlayLocation = new int[2];
         this.getLocationInWindow(overlayLocation);
-
-        float relativeX = targetLocation[0] - overlayLocation[0];
-        float relativeY = targetLocation[1] - overlayLocation[1];
-
         float pad = FocoraUtils.dpToPx(getContext(), theme.getSpotlightPaddingDp());
 
-        RectF rect = new RectF(
-                relativeX - pad,
-                relativeY - pad,
-                relativeX + step.getTarget().getWidth() + pad,
-                relativeY + step.getTarget().getHeight() + pad
-        );
+        RectF rect;
+        if (step.getTarget() != null) {
+            int[] targetLocation = new int[2];
+            step.getTarget().getLocationInWindow(targetLocation);
+
+            float relativeX = targetLocation[0] - overlayLocation[0];
+            float relativeY = targetLocation[1] - overlayLocation[1];
+
+            rect = new RectF(
+                    relativeX - pad,
+                    relativeY - pad,
+                    relativeX + step.getTarget().getWidth() + pad,
+                    relativeY + step.getTarget().getHeight() + pad
+            );
+        } else if (step.getTargetRect() != null) {
+            RectF v = step.getTargetRect();
+            rect = new RectF(v.left - pad, v.top - pad, v.right + pad, v.bottom + pad);
+        } else {
+            rect = new RectF();
+        }
 
         if (step.getShape() == FocoraShape.CIRCLE) {
             float cx = rect.centerX(), cy = rect.centerY();
@@ -306,18 +344,36 @@ public class FocoraOverlayView extends FrameLayout {
 
     @Override protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        renderer.render(canvas, getWidth(), getHeight(), currentSpotlightRect, currentCornerRadius, currentBgAlpha, currentShape, theme);
+        float maxRadiusPx = FocoraUtils.dpToPx(getContext(), theme.getPulseRingMaxRadiusDp());
+        renderer.render(canvas, getWidth(), getHeight(), currentSpotlightRect, currentCornerRadius, currentBgAlpha, currentShape, theme, pulseFraction, maxRadiusPx);
     }
 
     @Override protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         renderer.recycleBitmap();
-        if (currentAnimator != null) currentAnimator.cancel();
+        if (currentAnimator != null) {
+            currentAnimator.cancel();
+            currentAnimator = null;
+        }
+        if (pulseAnimator != null) {
+            pulseAnimator.cancel();
+            pulseAnimator = null;
+        }
     }
 
     @Override public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            if (currentSpotlightRect.contains(event.getX(), event.getY())) return false;
+            if (currentSpotlightRect.contains(event.getX(), event.getY())) {
+                if (currentStep != null) {
+                    if (currentStep.getOnTargetClickedAction() != null) {
+                        currentStep.getOnTargetClickedAction().run();
+                    }
+                    if (currentStep.isAdvanceOnTargetTap() || advanceOnTargetTap) {
+                        post(this::requestNextStep);
+                    }
+                }
+                return false;
+            }
             if (dismissOnTapOutside) { onSkip.run(); return true; }
             return true;
         }

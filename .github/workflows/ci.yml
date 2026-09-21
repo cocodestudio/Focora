@@ -1,0 +1,64 @@
+name: CI Build & Verification
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build & Verify Focora
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Verify Zero Dependencies
+        run: |
+          echo "Checking Focora dependencies block..."
+          ./gradlew :Focora:dependencies --configuration releaseRuntimeClasspath
+
+      - name: Compile Library Java
+        run: ./gradlew :Focora:compileDebugJavaWithJavac :Focora:compileReleaseJavaWithJavac
+
+      - name: Build Focora Release AAR
+        run: ./gradlew :Focora:assembleRelease
+
+      - name: Build Sample App APK
+        run: ./gradlew :app:assembleDebug
+
+      - name: Run Tests
+        run: ./gradlew test
+
+      - name: Upload Library AAR Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: focora-release-aar
+          path: Focora/build/outputs/aar/Focora-release.aar
+          if-no-files-found: error
+
+      - name: Upload Showcase APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: focora-showcase-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
